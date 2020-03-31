@@ -13,15 +13,18 @@ import (
 
 var db *gorm.DB
 
-// NewMySQL new db and retry connection when has error.
-func NewMySQL() *gorm.DB {
-	if db != nil {
-		log.Panicln("db 单例")
-		return db
-	}
-	db, err := gorm.Open("mysql", config.MysqlDsn)
+// init 包初始化函数类似Python init.py
+func init() {
+	var err error
+	db, err = gorm.Open("mysql", config.MysqlDsn)
 	if err != nil {
 		log.Panicln("db error: ", err.Error())
 	}
+	db.DB().SetMaxIdleConns(10) //连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭
+	db.DB().SetMaxOpenConns(50) //设置数据库连接池最大连接数
+}
+
+// NewMySQL 获取新的 mysql 连接
+func NewMySQL() *gorm.DB {
 	return db
 }

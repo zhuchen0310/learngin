@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v7"
 	"github.com/zhuchen/learngin/config"
@@ -9,20 +9,21 @@ import (
 
 var conn *redis.Client
 
+// init
+
+func init() {
+	conn = redis.NewClient(&redis.Options{
+		Addr:         config.RedisDsn,
+		Password:     "",              // no password set
+		DB:           1,               // use default DB
+		PoolSize:     50,              //连接池大小
+		MinIdleConns: 10,              //最小空闲连接数
+		IdleTimeout:  5 * time.Second, //最小空闲连接数
+	})
+}
+
 // NewRedis 新建Redis client
 func NewRedis() *redis.Client {
-	if conn != nil {
-		fmt.Println("单例", conn)
-		return conn
-	}
-	conn = redis.NewClient(&redis.Options{
-		Addr:     config.RedisDsn,
-		Password: "", // no password set
-		DB:       1,  // use default DB
-	})
-	fmt.Println("init conn", conn)
-	pong, err := conn.Ping().Result()
-	fmt.Println(pong, err)
 	return conn
 	// Output: PONG <nil>
 }

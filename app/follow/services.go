@@ -24,7 +24,6 @@ func Follow(c *gin.Context) {
 		return
 	}
 	db := database.NewMySQL()
-	defer db.Close()
 	var followRelationships database.FollowRelationships
 	db.FirstOrCreate(&followRelationships, database.FollowRelationships{FolllowerUserHash: data.RequestUserHash, FollloweeUserHash: data.OwnerUserHash})
 	c.JSON(http.StatusOK, gin.H{
@@ -47,7 +46,6 @@ func UnFollow(c *gin.Context) {
 		return
 	}
 	db := database.NewMySQL()
-	defer db.Close()
 	ret := new([]interface{})
 	db.Raw("Delete from follow_relationships Where follower_user_hash = ? and followee_user_hash = ?", data.RequestUserHash, data.OwnerUserHash).Scan(ret)
 	c.JSON(http.StatusOK, gin.H{
@@ -59,7 +57,6 @@ func UnFollow(c *gin.Context) {
 func UserFollowers(c *gin.Context) {
 	userHash := c.Param("userHash")
 	db := database.NewMySQL()
-	defer db.Close()
 	var followRelationshipses []*database.FollowRelationships
 	db.Where(&database.FollowRelationships{FollloweeUserHash: userHash}).Select("follower_user_hash").Find(&followRelationshipses)
 	var followRelationshipsList []string

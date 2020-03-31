@@ -68,7 +68,6 @@ func getActivityInfoFromCache(activityID int) (activityJSON, bool) {
 	var activityjson activityJSON
 
 	conn := redis.NewRedis()
-	defer conn.Close()
 	key := activityKey(activityID)
 	value, err := conn.Get(key).Result()
 
