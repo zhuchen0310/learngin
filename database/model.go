@@ -2,6 +2,8 @@ package database
 
 import (
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 // LocalPush 本地push 结构体
@@ -54,4 +56,20 @@ type FollowRelationships struct {
 // TableName 邀请关系表名称
 func (FollowRelationships) TableName() string {
 	return "follow_relationships"
+}
+
+type TodoModel struct {
+	gorm.Model
+	Title     string `json:"title"`
+	Completed int    `json:"completed"`
+}
+type TransformedTodo struct {
+	ID        uint   `json:"id"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
+}
+
+// 指定表名
+func (TodoModel) TableName() string {
+	return "todos"
 }

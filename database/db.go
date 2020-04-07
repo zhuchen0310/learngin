@@ -7,7 +7,7 @@ import (
 
 	"github.com/zhuchen/learngin/config"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // mysql
 	"github.com/jinzhu/gorm"
 )
 
